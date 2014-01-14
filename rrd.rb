@@ -2,6 +2,13 @@
 
 require 'pp'
 
+#
+# TODO:
+#  - meherere Datensaetze im gleichen RRD (per Hash)
+#  - min./max. der Werte
+#  - Summierung der Werte fuer Langzeit
+#
+
 class RRD
 
   def initialize(file, max_duration=nil, slot_time=nil)
