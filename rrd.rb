@@ -11,12 +11,8 @@ require 'pp'
 
 class RRD
 
-  def initialize(file, max_duration=nil, slot_time=nil)
+  def initialize(file, max_duration, slot_time)
     @file = file
-    if File.exists?(file)
-      @rrd = Marshal.load(File.open(file))
-      return
-    end
     time_now = (Time.now.to_i/slot_time)*slot_time
     @rrd = {
       max_duration: max_duration, slot_time: slot_time,
@@ -27,6 +23,17 @@ class RRD
       @rrd[:slots][time_at] = nil
       time_at -= slot_time
     end
+  end
+
+  def initialize(file)
+    unless File.exists?(file)
+    end
+    @file = file
+    @rrd = Marshal.load(File.open(file))
+  end
+  
+
+  def self.open(file)
   end
 
   def save
