@@ -9,21 +9,19 @@ rrd = RReDis.new
 
 config = {
   min01: {
-    steps: 60, rows: 2880, 
-    aggregations: ["average", "min", "max"], 
+    steps: 60, rows: 2880,
+    aggregations: ["average", "min", "max"],
     rra: [ {:steps=>300, :rows=>2976, :xff=>0.5},
            {:steps=>900, :rows=>2976, :xff=>0.5},
            {:steps=>3600, :rows=>8760, :xff=>0.5}]
   },
   min05: {
-    steps: 300, rows: 576, 
-    aggregations: ["average", "min", "max"], 
+    steps: 300, rows: 576,
+    aggregations: ["average", "min", "max"],
     rra: [ {:steps=>900, :rows=>2976, :xff=>0.5},
            {:steps=>3600, :rows=>8760, :xff=>0.5}]
   },
 }
-
-#min05 = alle 5min fuer 2 Tage
 
 config_set = {}
 
@@ -31,19 +29,12 @@ services = {
   "best" => {
     config: :min01
   },
-  "b-info" => {
-    config: :min01
-  },
-  "b-netbw" => {
-    config: :min01
-  },
-  "b-vpn" => {
-    config: :default
-  },
 }
 
-# in produktion am besten mit tail oeffnen
-IO.popen("tail --follow=name --retry /home/users/nagios/var/service-perfdata", "r") do |f|
+Dir.open("/home/users/nagios/var").each do |d|
+  next unless d=~/^service-perfdata/
+  puts "Parse #{d}..."
+  File.open("/home/users/nagios/var/#{d}") do |f|
   f.each do |line|
     line.chomp!
     line_a = line.split(/:/)
@@ -84,5 +75,6 @@ IO.popen("tail --follow=name --retry /home/users/nagios/var/service-perfdata", "
       rrd.store(key, time, val.to_f) unless val.nil?
     end
   end
+end
 end
 

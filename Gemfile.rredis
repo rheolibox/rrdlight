@@ -1,0 +1,7 @@
+source 'http://rubygems.org'
+
+gem 'rredis'
+gem 'sinatra'
+gem 'sprockets'
+gem 'vegas'
+gem 'slim'
